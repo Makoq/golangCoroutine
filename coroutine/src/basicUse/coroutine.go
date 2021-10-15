@@ -18,7 +18,7 @@ var wg sync.WaitGroup
 func add(x, y int) {
 	defer wg.Done()
 	z := x + y
-	fmt.Println(z)
+	fmt.Print(z,",")
 
 }
 
