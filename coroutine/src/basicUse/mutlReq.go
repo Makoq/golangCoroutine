@@ -38,7 +38,7 @@ func add(url string) {
 func main() {
 	url := "http://localhost:8082/common/user"
 	//一百万次并发请求
-	for i := 0; i < 1000000; i++ {
+	for i := 0; i < 10000; i++ {
 		wg.Add(1)
 		go add(url)
 	}
