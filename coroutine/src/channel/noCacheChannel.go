@@ -1,6 +1,8 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 /**
 *	无缓冲通道: ch := make(chan int)
@@ -11,7 +13,7 @@ var ch chan int
 
 func recv(ch chan int) {
 	re := <-ch
-	fmt.Println("receive success",re)
+	fmt.Println("receive success", re)
 	close(ch)
 }
 
