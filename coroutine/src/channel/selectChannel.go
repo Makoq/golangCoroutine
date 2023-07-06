@@ -39,27 +39,44 @@ func main() {
 
 	var msg1 int
 	var msg2 int
-	var received bool
+	var ch1received bool
+	var ch2received bool
+
+	// select {
+	// 	case msg1 = <-ch1:
+			 
+	// 		fmt.Println("xxx",msg1)
+	// 	case msg2 = <-ch2:
+	// 		fmt.Println("xxx",msg2)
+	// 	case <-timeout:
+	// 		fmt.Println("timeout")
+			
+	// 	default:
+	// 		fmt.Println("no message")
+ 	// 	}
 
 loop:
 	for {
 		select {
 		case msg1 = <-ch1:
-			received = true
+			ch1received = true
 		case msg2 = <-ch2:
-			received = true
+			ch2received = true
 		case <-timeout:
 			fmt.Println("timeout")
 			break loop
 		default:
 			fmt.Println("no message")
-			time.Sleep(100 * time.Millisecond)
+			// time.Sleep(100 * time.Millisecond)
 		}
 
-		if received {
+		if ch1received&&ch2received {
 			fmt.Println("xxxxxxxxx", msg1)
 			fmt.Println("xxxxxxxxx", msg2)
 			break loop
 		}
 	}
+
+
+
 }
