@@ -11,40 +11,55 @@ import (
 *	有缓冲通道: ch := make(chan int, n) n表示通信的元素个数
 **/
 var wg sync.WaitGroup
-var ch chan int
 
 func func1(ch chan int) {
-	time.Sleep(4 * time.Second)
-	ch <- 1
+	go func() {
+		time.Sleep(2 * time.Second)
+		ch <- 1
+	}()
 	defer wg.Done()
 }
 
 func func2(ch chan int) {
-	time.Sleep(6 * time.Second)
-
-	ch <- 2
+	go func() {
+		time.Sleep(3 * time.Second)
+		ch <- 2
+	}()
 	defer wg.Done()
-
 }
 
 func main() {
-	ch1 := make(chan int, 1)
-	ch2 := make(chan int, 1)
+	ch1 := make(chan int)
+	ch2 := make(chan int)
 	wg.Add(2)
 	go func1(ch1)
-	go func1(ch2)
+	go func2(ch2)
 	wg.Wait()
+	timeout := time.After(4 * time.Second)
 
-	//for+select 持续监听select
-	//这里会监听到func1和func2都执行完成后结束
+	var msg1 int
+	var msg2 int
+	var received bool
+
+loop:
 	for {
 		select {
-		case <-ch1:
-			fmt.Println("ch1")
-		case <-ch2:
-			fmt.Println("ch2")
-
+		case msg1 = <-ch1:
+			received = true
+		case msg2 = <-ch2:
+			received = true
+		case <-timeout:
+			fmt.Println("timeout")
+			break loop
+		default:
+			fmt.Println("no message")
+			time.Sleep(100 * time.Millisecond)
 		}
 
+		if received {
+			fmt.Println("xxxxxxxxx", msg1)
+			fmt.Println("xxxxxxxxx", msg2)
+			break loop
+		}
 	}
 }
